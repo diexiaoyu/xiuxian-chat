@@ -328,5 +328,10 @@
       setTimeout(() => { toast.className = 'toast'; }, 2000);
     }
   </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/xiuxian-chat/sw.js');
+  }
+</script>
 </body>
 </html>
