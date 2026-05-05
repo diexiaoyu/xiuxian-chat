@@ -4,18 +4,17 @@ const clients = new Map();
 Deno.serve((req) => {
   if (req.headers.get("upgrade") === "websocket") {
     const { socket, response } = Deno.upgradeWebSocket(req);
-    
+
     socket.onopen = () => {
       const player = { id: crypto.randomUUID(), name: '道友', location: '宗门广场' };
       clients.set(socket, player);
-      
-      socket.send(JSON.stringify({ 
-        type: 'system', 
-        text: `🌟 欢迎踏入修仙世界！你当前在【宗门广场】。` 
+
+      socket.send(JSON.stringify({
+        type: 'system',
+        text: '🌟 欢迎踏入修仙世界！你当前在【宗门广场】。'
       }));
-      
-      // 通知所有人
-      const msg = JSON.stringify({ type: 'system', text: `🌟 一位新道友踏入修仙世界！` });
+
+      const msg = JSON.stringify({ type: 'system', text: '🌟 一位新道友踏入修仙世界！' });
       clients.forEach((_, clientSocket) => clientSocket.send(msg));
     };
 
@@ -27,21 +26,32 @@ Deno.serve((req) => {
 
         if (data.type === 'join') {
           player.name = data.name || '道友';
-          socket.send(JSON.stringify({ type: 'init', players: [...clients.values()].map(p => ({name: p.name, location: p.location})), location: player.location }));
-          const joinMsg = JSON.stringify({ type: 'system', text: `🌟 ${player.name}（筑基期）踏入修仙世界！` });
+          socket.send(JSON.stringify({
+            type: 'init',
+            players: [...clients.values()].map(p => ({ name: p.name, location: p.location })),
+            location: player.location
+          }));
+          const joinMsg = JSON.stringify({ type: 'system', text: `🌟 ${player.name} 踏入修仙世界！` });
           clients.forEach((_, clientSocket) => clientSocket.send(joinMsg));
         }
-        
+
         if (data.type === 'chat') {
-          const msg = JSON.stringify({ type: 'chat', from: player.name, text: data.text, time: new Date().toLocaleTimeString() });
+          const msg = JSON.stringify({
+            type: 'chat',
+            from: player.name,
+            text: data.text,
+            time: new Date().toLocaleTimeString()
+          });
           clients.forEach((_, clientSocket) => clientSocket.send(msg));
         }
-        
+
         if (data.type === 'move') {
           player.location = data.toLocation || player.location;
           socket.send(JSON.stringify({ type: 'locationUpdate', location: player.location }));
         }
-      } catch (e) { console.error(e); }
+      } catch (e) {
+        console.error(e);
+      }
     };
 
     socket.onclose = () => {
@@ -55,6 +65,6 @@ Deno.serve((req) => {
 
     return response;
   }
-  
+
   return new Response('修仙聊天室服务器运行中', { status: 200 });
 });
