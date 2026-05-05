@@ -1,0 +1,21 @@
+{
+  "name": "修仙聊天室",
+  "short_name": "修仙",
+  "start_url": "/xiuxian-chat/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#e2b04a",
+  "description": "与道友们一起修仙聊天",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192.png?text=%E4%BF%AE%E4%BB%99",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512.png?text=%E4%BF%AE%E4%BB%99",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
